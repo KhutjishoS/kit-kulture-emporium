@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { ChevronDown, Menu, X, Search, ShoppingCart, User, Heart, LogOut } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronDown, Menu, X, Search, ShoppingCart, User, Heart, LogOut, Clock, TrendingUp } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { useSearch } from '@/contexts/SearchContext';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,19 +15,66 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { useNavigate } from 'react-router-dom';
+import products from '../pages/productsData';
 
 interface MainNavigationProps {
   cartItems: number;
   onCartOpen: () => void;
+  onWishlistOpen: () => void;
+  onSearchResultsOpen: () => void;
   onAuthOpen: (mode: 'login' | 'signup') => void;
   onNavCategoryClick?: (category: string, subcategory?: string, item?: string) => void;
 }
 
-const MainNavigation: React.FC<MainNavigationProps> = ({ cartItems, onCartOpen, onAuthOpen, onNavCategoryClick }) => {
+const MainNavigation: React.FC<MainNavigationProps> = ({ 
+  cartItems, 
+  onCartOpen, 
+  onWishlistOpen,
+  onSearchResultsOpen,
+  onAuthOpen, 
+  onNavCategoryClick 
+}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
+  
   const { user, signOut } = useAuth();
+  const { wishlistCount } = useWishlist();
+  const { performSearch, getSearchSuggestions } = useSearch();
   const navigate = useNavigate();
+
+  // Load recent searches from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('recentSearches');
+    if (saved) {
+      try {
+        setRecentSearches(JSON.parse(saved));
+      } catch (error) {
+        console.error('Error loading recent searches:', error);
+      }
+    }
+  }, []);
+
+  // Save recent searches to localStorage
+  useEffect(() => {
+    if (recentSearches.length > 0) {
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches.slice(0, 5)));
+    }
+  }, [recentSearches]);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navigationData = {
     football: {
@@ -45,8 +94,39 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ cartItems, onCartOpen, 
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
+    if (searchQuery.trim()) {
+      // Add to recent searches
+      setRecentSearches(prev => {
+        const newSearches = [searchQuery.trim(), ...prev.filter(s => s !== searchQuery.trim())];
+        return newSearches.slice(0, 5);
+      });
+
+      // Perform search
+      performSearch(searchQuery.trim(), products);
+      onSearchResultsOpen();
+      setShowSuggestions(false);
+    }
   };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchQuery(suggestion);
+    setRecentSearches(prev => {
+      const newSearches = [suggestion, ...prev.filter(s => s !== suggestion)];
+      return newSearches.slice(0, 5);
+    });
+    performSearch(suggestion, products);
+    onSearchResultsOpen();
+    setShowSuggestions(false);
+  };
+
+  const handleRecentSearchClick = (search: string) => {
+    setSearchQuery(search);
+    performSearch(search, products);
+    onSearchResultsOpen();
+    setShowSuggestions(false);
+  };
+
+  const suggestions = getSearchSuggestions(searchQuery, products);
 
   const handleCategoryClick = (category: string, subcategory?: string, item?: string) => {
     if (category === 'home') {
@@ -82,22 +162,76 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ cartItems, onCartOpen, 
           </div>
           
           {/* Search Bar - Desktop */}
-          <div className="hidden md:flex items-center flex-1 max-w-lg mx-8">
+          <div className="hidden md:flex items-center flex-1 max-w-lg mx-8 relative" ref={searchRef}>
             <form onSubmit={handleSearch} className="w-full relative">
               <Input 
                 placeholder="Search products..." 
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSuggestions(e.target.value.length > 0);
+                }}
+                onFocus={() => setShowSuggestions(searchQuery.length > 0 || recentSearches.length > 0)}
                 className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-200 focus:border-blue-500 focus:ring-0"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+              
+              {/* Search Suggestions Dropdown */}
+              {showSuggestions && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-80 overflow-y-auto">
+                  {/* Suggestions */}
+                  {suggestions.length > 0 && (
+                    <div className="p-2">
+                      <div className="text-xs font-medium text-gray-500 px-3 py-1">Suggestions</div>
+                      {suggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-md flex items-center gap-2"
+                        >
+                          <TrendingUp className="w-3 h-3 text-blue-500" />
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Recent Searches */}
+                  {recentSearches.length > 0 && (
+                    <div className="p-2 border-t border-gray-100">
+                      <div className="text-xs font-medium text-gray-500 px-3 py-1">Recent Searches</div>
+                      {recentSearches.map((search, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleRecentSearchClick(search)}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-md flex items-center gap-2"
+                        >
+                          <Clock className="w-3 h-3 text-gray-400" />
+                          {search}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </form>
           </div>
           
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="hidden md:flex">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="hidden md:flex relative" 
+              onClick={onWishlistOpen}
+            >
               <Heart className="w-5 h-5" />
+              {wishlistCount > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs px-1 min-w-[20px] h-5 flex items-center justify-center rounded-full">
+                  {wishlistCount}
+                </Badge>
+              )}
+              <span className="ml-2">Wishlist</span>
             </Button>
             
             {user ? (
@@ -198,7 +332,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ cartItems, onCartOpen, 
 
               <NavigationMenuItem>
                 <NavigationMenuLink 
-                  className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors cursor-pointer"
+                  className="px-4 py-2 text-sm font-medium hover:text-blue-600 transition-colors cursor-pointer"
                   onClick={() => handleCategoryClick('sale')}
                 >
                   Sale
@@ -211,23 +345,22 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ cartItems, onCartOpen, 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="space-y-4">
             {/* Mobile Search */}
-            <div className="mb-4">
               <form onSubmit={handleSearch} className="relative">
                 <Input 
                   placeholder="Search products..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2"
+                  className="w-full pl-10 pr-4 py-2 rounded-full border-2 border-gray-200 focus:border-blue-500 focus:ring-0"
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
               </form>
-            </div>
 
-            {/* Mobile Navigation Links */}
-            <div className="space-y-4">
+              {/* Mobile Navigation */}
+              <div className="space-y-2">
               <button 
-                className="block w-full text-left py-2 text-sm font-medium hover:text-blue-600 transition-colors"
+                  className="w-full text-left px-4 py-2 text-sm font-medium hover:text-blue-600 transition-colors"
                 onClick={() => handleCategoryClick('home')}
               >
                 Home
@@ -235,51 +368,75 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ cartItems, onCartOpen, 
 
               {Object.entries(navigationData).map(([key, category]) => (
                 <div key={key} className="space-y-2">
-                  <button 
-                    className="block w-full text-left py-2 text-sm font-medium hover:text-blue-600 transition-colors border-b border-gray-100"
-                    onClick={() => handleCategoryClick(key)}
-                  >
+                    <div className="px-4 py-2 text-sm font-medium text-gray-900">
                     {category.title}
-                  </button>
-                  <div className="pl-4 space-y-2">
+                    </div>
                     {category.subcategories.map((subcategory, index) => (
-                      <div key={index} className="space-y-1">
-                        <button
-                          className="block w-full text-left py-1 text-sm text-gray-700 hover:text-blue-600 transition-colors font-medium"
-                          onClick={() => handleCategoryClick(key, subcategory.title)}
-                        >
+                      <div key={index} className="ml-4 space-y-1">
+                        <div className="px-4 py-1 text-sm font-medium text-gray-700">
                           {subcategory.title}
-                        </button>
-                        <div className="pl-4 space-y-1">
-                          {subcategory.items.slice(0, 3).map((item, itemIndex) => (
+                        </div>
+                        {subcategory.items.map((item, itemIndex) => (
                             <button
                               key={itemIndex}
-                              className="block w-full text-left py-1 text-xs text-gray-600 hover:text-blue-600 transition-colors"
+                            className="w-full text-left px-4 py-1 text-sm text-gray-600 hover:text-blue-600 transition-colors"
                               onClick={() => handleCategoryClick(key, subcategory.title, item)}
                             >
                               {item}
                             </button>
                           ))}
-                        </div>
                       </div>
                     ))}
-                  </div>
                 </div>
               ))}
 
               <button 
-                className="block w-full text-left py-2 text-sm font-medium hover:text-blue-600 transition-colors"
-                onClick={() => handleCategoryClick('gallery')}
+                  className="w-full text-left px-4 py-2 text-sm font-medium hover:text-blue-600 transition-colors"
+                  onClick={() => handleCategoryClick('gallery')}
               >
-                Gallery
+                  Gallery
               </button>
 
               <button 
-                className="block w-full text-left py-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+                  className="w-full text-left px-4 py-2 text-sm font-medium hover:text-blue-600 transition-colors"
                 onClick={() => handleCategoryClick('sale')}
               >
                 Sale
               </button>
+              </div>
+
+              {/* Mobile Actions */}
+              <div className="pt-4 border-t border-gray-200 space-y-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full justify-start relative" 
+                  onClick={onWishlistOpen}
+                >
+                  <Heart className="w-5 h-5" />
+                  <span className="ml-2">Wishlist</span>
+                  {wishlistCount > 0 && (
+                    <Badge className="ml-auto bg-pink-500 text-white text-xs px-1 min-w-[20px] h-5 flex items-center justify-center rounded-full">
+                      {wishlistCount}
+                    </Badge>
+                  )}
+                </Button>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full justify-start relative" 
+                  onClick={onCartOpen}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span className="ml-2">Cart</span>
+                  {cartItems > 0 && (
+                    <Badge className="ml-auto bg-red-500 text-white text-xs px-1 min-w-[20px] h-5 flex items-center justify-center rounded-full">
+                      {cartItems}
+                    </Badge>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         )}

@@ -2,27 +2,73 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Heart, Star, ShoppingCart } from 'lucide-react';
 import MainNavigation from '../components/MainNavigation';
+import ShoppingCartComponent from '../components/ShoppingCart';
+import Wishlist from '../components/Wishlist';
+import SearchResults from '../components/SearchResults';
+import SizeSelector from '../components/SizeSelector';
+import AuthModal from '../components/AuthModal';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import products from './productsData';
 
 const ProductCategoryPage = () => {
   const { category } = useParams();
-  const [cartItems, setCartItems] = useState(0);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isSearchResultsOpen, setIsSearchResultsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const openAuth = (mode: 'login' | 'signup') => setIsAuthOpen(true);
+  const [selectedSizes, setSelectedSizes] = useState<{ [key: number]: string }>({});
+  
+  const { addToCart, cartCount, isInCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const displayCategory = category ? category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '';
   const filteredProducts = products.filter(
     (product) => product.category.toLowerCase().replace(/ /g, '-') === category
   );
 
+  const handleSizeSelect = (productId: number, size: string) => {
+    setSelectedSizes(prev => ({
+      ...prev,
+      [productId]: size
+    }));
+  };
+
+  const handleAddToCart = (product: any) => {
+    const selectedSize = selectedSizes[product.id];
+    if (!selectedSize) {
+      // Show error or prompt to select size
+      return;
+    }
+    
+    addToCart(product, selectedSize);
+  };
+
+  const handleToggleWishlist = (product: any) => {
+    toggleWishlist({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+      originalPrice: product.originalPrice,
+      badge: product.badge,
+      rating: product.rating
+    });
+  };
+
+  const openAuth = (mode: 'login' | 'signup') => setIsAuthOpen(true);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <MainNavigation 
-        cartItems={cartItems}
+        cartItems={cartCount}
         onCartOpen={() => setIsCartOpen(true)}
+        onWishlistOpen={() => setIsWishlistOpen(true)}
+        onSearchResultsOpen={() => setIsSearchResultsOpen(true)}
         onAuthOpen={openAuth}
       />
       <div className="container mx-auto px-4 py-12">
@@ -35,17 +81,26 @@ const ProductCategoryPage = () => {
                   src={product.image} 
                   alt={product.name}
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/placeholder.svg';
+                  }}
                 />
                 {product.badge && (
                   <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium">
                     {product.badge}
                   </Badge>
                 )}
-                <button 
-                  className={`absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all text-gray-700`}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={`absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all ${
+                    isInWishlist(product.id) ? 'text-red-500' : 'text-gray-700'
+                  }`}
+                  onClick={() => handleToggleWishlist(product)}
                 >
-                  <Heart className="w-4 h-4" />
-                </button>
+                  <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                </Button>
               </div>
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-2">
@@ -70,11 +125,47 @@ const ProductCategoryPage = () => {
                     )}
                   </div>
                 </div>
-                <button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
+
+                {/* Size Selector */}
+                <div className="mb-4">
+                  <SizeSelector
+                    sizes={product.sizes || []}
+                    availableSizes={product.availableSizes || []}
+                    selectedSize={selectedSizes[product.id] || null}
+                    onSizeSelect={(size) => handleSizeSelect(product.id, size)}
+                  />
+                </div>
+
+                <Button 
+                  onClick={() => handleAddToCart(product)}
+                  disabled={!selectedSizes[product.id] || product.availableSizes?.length === 0}
+                  className={`w-full font-semibold py-2 rounded-lg transition-all transform hover:scale-105 shadow-md hover:shadow-lg ${
+                    !selectedSizes[product.id] || product.availableSizes?.length === 0
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : isInCart(product.id, selectedSizes[product.id])
+                      ? 'bg-green-600 hover:bg-green-700 text-white'
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white'
+                  }`}
                 >
-                  Add to Cart
-                </button>
+                  {!selectedSizes[product.id] 
+                    ? 'Select Size'
+                    : product.availableSizes?.length === 0
+                    ? 'Out of Stock'
+                    : isInCart(product.id, selectedSizes[product.id])
+                    ? (
+                      <>
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        In Cart
+                      </>
+                    )
+                    : (
+                      <>
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </>
+                    )
+                  }
+                </Button>
               </CardContent>
             </Card>
           ))}
@@ -83,6 +174,22 @@ const ProductCategoryPage = () => {
           <div className="text-center text-gray-500 mt-12">No products found for this category.</div>
         )}
       </div>
+
+      {/* Shopping Cart Modal */}
+      <ShoppingCartComponent isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      {/* Wishlist Modal */}
+      <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+
+      {/* Search Results Modal */}
+      <SearchResults isOpen={isSearchResultsOpen} onClose={() => setIsSearchResultsOpen(false)} />
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthOpen} 
+        onClose={() => setIsAuthOpen(false)} 
+        initialMode="login"
+      />
     </div>
   );
 };

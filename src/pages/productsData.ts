@@ -1,5 +1,4 @@
-// Remove default products for jerseys, training set, boots, and gloves
-
+// Products data with all sizes available
 const products = [
   // Bucket Hats products
   {
@@ -9,7 +8,9 @@ const products = [
     image: '/images/bucket-hats/hat1.jpg',
     category: 'Bucket Hats',
     rating: 4.5,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 1002,
@@ -18,7 +19,9 @@ const products = [
     image: '/images/bucket-hats/hat2.jpg',
     category: 'Bucket Hats',
     rating: 4.6,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 1003,
@@ -27,7 +30,9 @@ const products = [
     image: '/images/bucket-hats/hat3.jpg',
     category: 'Bucket Hats',
     rating: 4.4,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 1004,
@@ -36,7 +41,9 @@ const products = [
     image: '/images/bucket-hats/hat4.jpg',
     category: 'Bucket Hats',
     rating: 4.7,
-    badge: 'Limited'
+    badge: 'Limited',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 1005,
@@ -45,7 +52,9 @@ const products = [
     image: '/images/bucket-hats/hat5.jpg',
     category: 'Bucket Hats',
     rating: 4.5,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 1006,
@@ -54,7 +63,9 @@ const products = [
     image: '/images/bucket-hats/hat6.jpg',
     category: 'Bucket Hats',
     rating: 4.3,
-    badge: 'Classic'
+    badge: 'Classic',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 1007,
@@ -63,9 +74,11 @@ const products = [
     image: '/images/bucket-hats/hat7.jpg',
     category: 'Bucket Hats',
     rating: 4.8,
-    badge: 'Premium'
+    badge: 'Premium',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
-  // Camo Long Jackets products (placeholders)
+  // Camo Long Jackets products
   {
     id: 2001,
     name: 'Camo Long Jacket 1',
@@ -73,7 +86,9 @@ const products = [
     image: '/images/Camo Long Jackets/IMG-20250516-WA0004.jpg',
     category: 'Camo Long Jackets',
     rating: 4.5,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 2002,
@@ -82,9 +97,11 @@ const products = [
     image: '/images/Camo Long Jackets/IMG-20250605-WA0002.jpg',
     category: 'Camo Long Jackets',
     rating: 4.6,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
-  // Caps products (10 slots)
+  // Caps products
   {
     id: 3001,
     name: 'Cap 1',
@@ -92,7 +109,9 @@ const products = [
     image: '/images/Caps/cap1 (1).jpg',
     category: 'Caps',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3002,
@@ -101,7 +120,9 @@ const products = [
     image: '/images/Caps/cap1 (2).jpg',
     category: 'Caps',
     rating: 4.3,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3003,
@@ -110,7 +131,9 @@ const products = [
     image: '/images/Caps/cap1 (3).jpg',
     category: 'Caps',
     rating: 4.1,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3004,
@@ -119,7 +142,9 @@ const products = [
     image: '/images/Caps/cap1 (4).jpg',
     category: 'Caps',
     rating: 4.4,
-    badge: 'Limited'
+    badge: 'Limited',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3005,
@@ -128,7 +153,9 @@ const products = [
     image: '/images/Caps/cap1 (5).jpg',
     category: 'Caps',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3006,
@@ -137,7 +164,9 @@ const products = [
     image: '/images/Caps/cap1 (6).jpg',
     category: 'Caps',
     rating: 4.3,
-    badge: 'Classic'
+    badge: 'Classic',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3007,
@@ -146,7 +175,9 @@ const products = [
     image: '/images/Caps/cap1 (7).jpg',
     category: 'Caps',
     rating: 4.5,
-    badge: 'Premium'
+    badge: 'Premium',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3008,
@@ -155,7 +186,9 @@ const products = [
     image: '/images/Caps/cap1 (8).jpg',
     category: 'Caps',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3009,
@@ -164,7 +197,9 @@ const products = [
     image: '/images/Caps/cap1 (9).jpg',
     category: 'Caps',
     rating: 4.4,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
   {
     id: 3010,
@@ -173,9 +208,11 @@ const products = [
     image: '/images/Caps/cap1 (10).jpg',
     category: 'Caps',
     rating: 4.3,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['S/M', 'L/XL', 'One Size'],
+    availableSizes: ['S/M', 'L/XL', 'One Size']
   },
-  // Hoodies products (2 slots)
+  // Hoodies products
   {
     id: 4001,
     name: 'Hoodie 1',
@@ -183,7 +220,9 @@ const products = [
     image: '/images/Hoodies/IMG-20231113-WA0013.jpg',
     category: 'Hoodies',
     rating: 4.6,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 4002,
@@ -192,9 +231,11 @@ const products = [
     image: '/images/Hoodies/IMG-20231113-WA0014.jpg',
     category: 'Hoodies',
     rating: 4.7,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
-  // Quilted puff jacket product with multiple images
+  // Quilted puff jacket product
   {
     id: 5001,
     name: 'Quilted Puff Jacket',
@@ -202,9 +243,11 @@ const products = [
     image: '/images/Quilted puff jacket/signal-2022-05-15-14-37-20-389.jpg',
     category: 'Quilted puff jacket',
     rating: 4.8,
-    badge: 'Premium'
+    badge: 'Premium',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
-  // Shorts products (16 slots)
+  // Shorts products
   {
     id: 6001,
     name: 'Short 1',
@@ -212,7 +255,9 @@ const products = [
     image: '/images/Shorts/short1 (1).jpg',
     category: 'Shorts',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6002,
@@ -221,7 +266,9 @@ const products = [
     image: '/images/Shorts/short1 (2).jpg',
     category: 'Shorts',
     rating: 4.3,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6003,
@@ -230,7 +277,9 @@ const products = [
     image: '/images/Shorts/short1 (3).jpg',
     category: 'Shorts',
     rating: 4.1,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6004,
@@ -239,7 +288,9 @@ const products = [
     image: '/images/Shorts/short1 (4).jpg',
     category: 'Shorts',
     rating: 4.4,
-    badge: 'Limited'
+    badge: 'Limited',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6005,
@@ -248,7 +299,9 @@ const products = [
     image: '/images/Shorts/short1 (5).jpg',
     category: 'Shorts',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6006,
@@ -257,7 +310,9 @@ const products = [
     image: '/images/Shorts/short1 (6).jpg',
     category: 'Shorts',
     rating: 4.3,
-    badge: 'Classic'
+    badge: 'Classic',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6007,
@@ -266,7 +321,9 @@ const products = [
     image: '/images/Shorts/short1 (7).jpg',
     category: 'Shorts',
     rating: 4.5,
-    badge: 'Premium'
+    badge: 'Premium',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6008,
@@ -275,7 +332,9 @@ const products = [
     image: '/images/Shorts/short1 (8).jpg',
     category: 'Shorts',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6009,
@@ -284,7 +343,9 @@ const products = [
     image: '/images/Shorts/short1 (9).jpg',
     category: 'Shorts',
     rating: 4.4,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6010,
@@ -293,7 +354,9 @@ const products = [
     image: '/images/Shorts/short1 (10).jpg',
     category: 'Shorts',
     rating: 4.3,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6011,
@@ -302,7 +365,9 @@ const products = [
     image: '/images/Shorts/short1 (11).jpg',
     category: 'Shorts',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6012,
@@ -311,7 +376,9 @@ const products = [
     image: '/images/Shorts/short1 (12).jpg',
     category: 'Shorts',
     rating: 4.3,
-    badge: 'Classic'
+    badge: 'Classic',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6013,
@@ -320,7 +387,9 @@ const products = [
     image: '/images/Shorts/short1 (13).jpg',
     category: 'Shorts',
     rating: 4.5,
-    badge: 'Premium'
+    badge: 'Premium',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6014,
@@ -329,7 +398,9 @@ const products = [
     image: '/images/Shorts/short1 (14).jpg',
     category: 'Shorts',
     rating: 4.2,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6015,
@@ -338,7 +409,9 @@ const products = [
     image: '/images/Shorts/short1 (15).jpg',
     category: 'Shorts',
     rating: 4.4,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 6016,
@@ -347,9 +420,11 @@ const products = [
     image: '/images/Shorts/short1 (16).jpg',
     category: 'Shorts',
     rating: 4.3,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
-  // Sweaters products (3 slots)
+  // Sweaters products
   {
     id: 7001,
     name: 'Sweater 1',
@@ -357,7 +432,9 @@ const products = [
     image: '/images/Sweaters/s1 (1).jpg',
     category: 'Sweaters',
     rating: 4.5,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 7002,
@@ -366,7 +443,9 @@ const products = [
     image: '/images/Sweaters/s1 (2).jpg',
     category: 'Sweaters',
     rating: 4.6,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 7003,
@@ -375,9 +454,11 @@ const products = [
     image: '/images/Sweaters/s1 (3).jpg',
     category: 'Sweaters',
     rating: 4.4,
-    badge: 'Popular'
+    badge: 'Popular',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
-  // Tracksuits products (2 slots)
+  // Tracksuits products
   {
     id: 8001,
     name: 'Tracksuit 1',
@@ -385,7 +466,9 @@ const products = [
     image: '/images/Tracksuits/t1 (1).jpg',
     category: 'Tracksuits',
     rating: 4.7,
-    badge: 'New'
+    badge: 'New',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   },
   {
     id: 8002,
@@ -394,7 +477,9 @@ const products = [
     image: '/images/Tracksuits/t1 (2).jpg',
     category: 'Tracksuits',
     rating: 4.8,
-    badge: 'Trending'
+    badge: 'Trending',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    availableSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   }
 ];
 

@@ -36,6 +36,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!supabase) {
+      toast({
+        title: "Error",
+        description: "Authentication service is not configured",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     if (formData.password !== formData.confirmPassword) {
@@ -80,6 +90,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!supabase) {
+      toast({
+        title: "Error",
+        description: "Authentication service is not configured",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -108,6 +128,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!supabase) {
+      toast({
+        title: "Error",
+        description: "Authentication service is not configured",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     try {

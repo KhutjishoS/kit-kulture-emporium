@@ -1,6 +1,3 @@
-Here’s a clean README rewrite for your project that removes all references to Lovable AI and keeps it professional, while still guiding others on how to edit and deploy it:
-# Project README
-
 ## Project Info
 
 This project is a modern web application built with:
